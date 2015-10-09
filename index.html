@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title></title>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+  <style>
+    body { margin:0; padding:0; }
+    .map { position:absolute; top:0; bottom:0; width:100%; }
+  </style>
+</head>
+<body>
+
+
+
+<style>
+.legend label,
+.legend span {
+  display: block;
+  float:left;
+  height:150px;
+  width:20%;
+  text-align:center;
+  font-size:9px;
+  color:#808080;
+  }
+  .leaflet-right{
+    left: 0;
+    right: inherit;
+    position: absolute;
+    background: transparent;
+  }
+  .map-legends {
+    background: transparent;
+  }
+</style>
+
+<!-- Set the display of this container to none so we can
+     add it programmatically to `legendControl` -->
+<div id='legend' style='display:none;'>
+  <strong></strong>
+  <img src="https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg" width="200" alt="">
+</div>
+
+
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-hash/v0.2.1/leaflet-hash.js'></script>
+
+<div id='map-tooltips-js' class='map'> </div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoicHJhdGlreWFkYXYiLCJhIjoiMTA2YWUxNjRkNmFmZGQ4YzAxZWFiNDk0NDM1YjE1YjAifQ.4P6N5dNmA_WQXd3BsJvu5w';
+
+var southWest = L.latLng(31.203404950917395, -26.54296875),
+    northEast = L.latLng(68.75231494434473, 52.03125),
+    bounds = L.latLngBounds(southWest, northEast);
+
+var mapTooltipsJS = L.mapbox.map('map-tooltips-js', 'pratikyadav.7d106f0d', {
+    // set that bounding box as maxBounds to restrict moving the map
+    // see full maxBounds documentation:
+    // http://leafletjs.com/reference.html#map-maxbounds
+    maxBounds: bounds,
+    maxZoom: 7,
+    minZoom: 5
+}).setView([47.175, 12.722], 5);;
+
+var myLayer = L.mapbox.featureLayer().addTo(mapTooltipsJS);
+
+var geojson = [
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -3.71063232421875,
+          40.38839687388361
+        ]
+    },
+    "properties": {
+      "title": "Real Madrid",
+      "description": "1714 14th St NW, Washington DC",
+      "image": "http://theartmad.com/wp-content/uploads/2015/05/Real-Madrid-Team-Wallpaper-2014-15-5.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
+          "iconSize": [50, 50], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          9.185943603515625,
+          45.46205707250824
+        ]
+    },
+    "properties": {
+      "title": "A.C. Milan",
+      "description": "155 9th St, San Francisco",
+      "image": "http://cdn.fansided.com/wp-content/blogs.dir/207/files/2014/10/soccer-friendly-liverpool-fc-vs-ac-milan2-850x560.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/d/db/AC_Milan.svg",
+          "iconSize": [50, 50], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          11.58576965332031,
+          48.1367666796927
+        ]
+    },
+    "properties": {
+      "title": "Bayern Munich",
+      "description": "155 9th St, San Francisco",
+      "image": "http://s.sportra.com/bayern-champions1.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_M%C3%BCnchen.svg",
+          "iconSize": [50, 50], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          2.1567535400390625,
+          41.3920064921849
+        ]
+    },
+    "properties": {
+      "title": "FC Barcelona",
+      "description": "155 9th St, San Francisco",
+      "image": "http://www.thehardtackle.com/wp-content/uploads/2015/06/04787140-1024x682.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
+          "iconSize": [50, 50], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -2.9807281494140625,
+          53.409736504303645
+        ]
+
+    },
+    "properties": {
+      "title": "Liverpool F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://img1.wikia.nocookie.net/__cb20110708122805/liverpoolfc/images/7/79/Lfc_cl_final.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
+          "iconSize": [50, 50], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          4.89715576171875,
+          52.372664783594274
+        ]
+    },
+    "properties": {
+      "title": "AFC Ajax",
+      "description": "155 9th St, San Francisco",
+      "image": "http://usercontent2.hubimg.com/8434041_f520.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/7/79/Ajax_Amsterdam.svg",
+          "iconSize": [50, 50], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          9.149036407470703,
+          45.47072521359533
+        ]
+    },
+    "properties": {
+      "title": "Inter Milan",
+      "description": "155 9th St, San Francisco",
+      "image": "http://www.uefa.com/MultimediaFiles/Photo/competitions/Comp_Matches/01/49/16/40/1491640_w2.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/2/23/Inter_Milan.png",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -2.2458457946777344,
+          53.47946516977089
+        ]
+    },
+    "properties": {
+      "title": "Manchester United F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://mufcfans.com/images/Champions19-Trophy2.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          7.683391571044922,
+          45.07691486381232
+        ]
+    },
+    "properties": {
+      "title": "Juventus F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://cache3.asset-cache.net/gc/474518850-juventus-players-celebrate-with-the-italian-gettyimages.jpg?v=1&c=IWSAsset&k=2&d=GkZZ8bf5zL1ZiijUmxa7QVBD2Ei6cqIH5FvC9tN%2F5UvdUDyG4iWKfadbOtX2jC%2FLsuOlys6T%2BGcqTxNnr6c7gw%3D%3D",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/d/d2/Juventus_Turin.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -9.139595031738281,
+          38.713375686254714
+        ]
+    },
+    "properties": {
+      "title": "S.L. Benfica",
+      "description": "155 9th St, San Francisco",
+      "image": "http://cache1.asset-cache.net/gc/474534520-benfica-players-celebrating-receving-the-gettyimages.jpg?v=1&c=IWSAsset&k=2&d=GkZZ8bf5zL1ZiijUmxa7QcusugPFzI%2B%2FOu%2B4oIOoBAQ5PTz5FAo96ereFaA%2B31wMjNoLIvTK6%2BihPpWLvtTCKQ%3D%3D",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -1.15081787109375,
+          52.95463648146399
+        ]
+    },
+    "properties": {
+      "title": "Nottingham Forest F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://i.dailymail.co.uk/i/pix/2010/05/21/article-1280305-0064F1A200000258-637_468x309.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/d/d2/Nottingham_Forest_logo.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -8.614139556884766,
+          41.151580414599984
+        ]
+    },
+    "properties": {
+      "title": "FC Porto",
+      "description": "155 9th St, San Francisco",
+      "image": "http://cache3.asset-cache.net/gc/78989269-sport-football-uefa-champions-league-final-gettyimages.jpg?v=1&c=IWSAsset&k=2&d=fOqRSGnZREbdOD5U9z9TH6mr2UIuQeb4LTUYHlMOD9FjXM0uur4888L0rKEiesFU2RlsADTZL8%2FEKYvDxX4RvQ%3D%3D",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -4.2537689208984375,
+          55.85855079277496
+        ]
+    },
+    "properties": {
+      "title": "Celtic F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://i4.dailyrecord.co.uk/incoming/article5753499.ece/ALTERNATES/s1023/JS64451865.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/3/35/Celtic_FC.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          9.9810791015625,
+          53.56274386269267
+        ]
+    },
+    "properties": {
+      "title": "Hamburger SV",
+      "description": "155 9th St, San Francisco",
+      "image": "http://cache1.asset-cache.net/gc/173442560-hamburger-sv-team-celebrate-with-the-trophy-gettyimages.jpg?v=1&c=IWSAsset&k=2&d=GkZZ8bf5zL1ZiijUmxa7QRQE46yjxYH3V7gJreeFWY%2BVC8KrDNo1xAyW0sO%2BD2%2BpCnqHxgEOBR0LwkdO6LFw6w%3D%3D",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/66/HSV-Logo.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          26.091842651367188,
+          44.44505579897742
+        ]
+    },
+    "properties": {
+      "title": "FC Steaua București",
+      "description": "155 9th St, San Francisco",
+      "image": "http://thumbs.dreamstime.com/z/steaua-bucharest-players-celebrate-winning-romanian-cup-trophy-win-against-universitatea-cluj-national-arena-54843928.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/9/93/FC_Steaua_Bucuresti_SA_Logo.png",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          5.370426177978515,
+          43.298010484719356
+        ]
+    },
+    "properties": {
+      "title": "Olympique de Marseille",
+      "description": "155 9th St, San Francisco",
+      "image": "http://www.ligue1.com/images/photos/articles/web/fiche/1011_CDL_Marseille_joie.jpg?org=tinymce",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/8/88/Olympique_de_Marseille_logo.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          7.464523315429687,
+          51.51707531179727
+        ]
+    },
+    "properties": {
+      "title": "Borussia Dortmund",
+      "description": "155 9th St, San Francisco",
+      "image": "http://cache4.asset-cache.net/gc/144022103-borussia-dortmund-players-celebrate-their-gettyimages.jpg?v=1&c=IWSAsset&k=2&d=Z0zsWpN2ukUDXYqF4boPJa%2F9feenZ7CVD9whXrXydBdQ5%2BrlZ4WDyHduYZAtYPad2NkWpE8xxlFw7a0wl4J8EA%3D%3D",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -0.2142333984375,
+          51.59328214377155
+        ]
+    },
+    "properties": {
+      "title": "Chelsea F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://ciyaaro.com/portal/wp-content/uploads/2012/05/Chelseas-players-celebrate-with-the-trophy-after-the-UEFA-Champions-League-final-.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -0.2142333984375,
+          51.59328214377155
+        ]
+    },
+    "properties": {
+      "title": "Chelsea F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://ciyaaro.com/portal/wp-content/uploads/2012/05/Chelseas-players-celebrate-with-the-trophy-after-the-UEFA-Champions-League-final-.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          4.464139938354491,
+          51.92351998447844
+        ]
+    },
+    "properties": {
+      "title": "Feyenoord",
+      "description": "155 9th St, San Francisco",
+      "image": "http://www.dailystar.com.lb/dailystar/Pictures/2014/08/29/343037_img650x420_img650x420_crop.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/e/e3/Feyenoord_logo.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          -1.8842411041259766,
+          52.50613909894946
+        ]
+
+    },
+    "properties": {
+      "title": "Aston Villa F.C.",
+      "description": "155 9th St, San Francisco",
+      "image": "http://i1.birminghammail.co.uk/incoming/article7782524.ece/ALTERNATES/s1227b/The-Aston-Villa-official-photo-call-at-the-clubs-training-ground-at-Bodymoor-Heath-on-September-16-2014.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/1/15/Aston_Villa.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+          5.473251342773437,
+          51.44459262112174
+        ]
+
+
+    },
+    "properties": {
+      "title": "PSV Eindhoven",
+      "description": "155 9th St, San Francisco",
+      "image": "http://www.football-wallpapers.com/wallpapers/psv_1_1024x768.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/en/0/05/PSV_Eindhoven.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates":  [
+          20.4400634765625,
+          44.80425002911523
+        ]
+
+
+    },
+    "properties": {
+      "title": "Red Star Belgrade",
+      "description": "155 9th St, San Francisco",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/f/f5/CRVENA_ZVEZDA-IBV_ICELAND_18.jpg",
+      "icon": {
+          "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Logo_FC_Red_Star_Belgrade.svg",
+          "iconSize": [40, 40], // size of the icon
+          "iconAnchor": [25, 25], // point of the icon which will correspond to marker's location
+          "popupAnchor": [0, -25], // point from which the popup should open relative to the iconAnchor
+          "className": "dot"
+      }
+    }
+  }
+]
+
+
+;
+
+// Set a custom icon on each marker based on feature properties.
+myLayer.on('layeradd', function(e) {
+  var marker = e.layer,
+    feature = marker.feature;
+  marker.setIcon(L.icon(feature.properties.icon));
+  var content = '<h2>'+ feature.properties.title+'<\/h2>' + '<img src="'+feature.properties.image+'" width="200" alt="">';
+  marker.bindPopup(content);
+});
+myLayer.setGeoJSON(geojson);
+//mapTooltipsJS.scrollWheelZoom.disable();
+mapTooltipsJS.fitBounds(bounds);
+mapTooltipsJS.legendControl.addLegend(document.getElementById('legend').innerHTML);
+var hash = L.hash(mapTooltipsJS)
+var layers = {
+      Streets: L.mapbox.tileLayer('pratikyadav.7d106f0d'),
+      Outdoors: L.mapbox.tileLayer('mapbox.outdoors')
+
+  };
+
+  layers.Streets.addTo(mapTooltipsJS);
+  L.control.layers(layers).addTo(mapTooltipsJS);
+
+</script>
+</body>
+</html>
